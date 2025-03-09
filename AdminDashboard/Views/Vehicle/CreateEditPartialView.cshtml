@@ -1,0 +1,62 @@
+﻿@model VehicleViewModel
+
+
+@inject IUnitOfWork unitOfWork
+@{
+    var Brands = new SelectList(unitOfWork.Repository<VehicleBrand>().GetAllAsync().Result, "Id", "Name");
+    var Types = new SelectList(unitOfWork.Repository<VehicleType>().GetAllAsync().Result, "Id", "Name");
+}
+
+
+<div class="form-group">
+    <label asp-for="Image" class="col-form-label "></label>
+    <input asp-for="Image" class="form-control" />
+</div>
+
+<div class="form-group">
+    <label asp-for="Name" class="col-form-label"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Description" class="col-form-label"></label>
+    <input asp-for="Description" class="form-control" />
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="price" class="col-form-label"></label>
+    <input asp-for="price" class="form-control" type="number" />
+    <span asp-validation-for="price" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="MaxWeight" class="col-form-label"></label>
+    <input asp-for="MaxWeight" class="form-control" type="number" />
+    <span asp-validation-for="MaxWeight" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Length" class="col-form-label"></label>
+    <input asp-for="Length" class="form-control" type="number" />
+    <span asp-validation-for="Length" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Width" class="col-form-label"></label>
+    <input asp-for="Width" class="form-control" type="number" />
+    <span asp-validation-for="Width" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Height" class="col-form-label"></label>
+    <input asp-for="Height" class="form-control" type="number" />
+    <span asp-validation-for="Height" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Brand" class="col-form-label"></label>
+    <select asp-for="BrandId" class="form-control" asp-items="Brands">
+        <option value="@null">-- Select Brand --</option>
+    </select>
+</div>
+<div class="form-group">
+    <label asp-for="Type" class="col-form-label"></label>
+    <select asp-for="TypeId" class="form-control" asp-items="Types">
+        <option value="@null">-- Select Type --</option>
+    </select>
+</div>
