@@ -18,12 +18,14 @@ namespace LoadFit.Service
 
         private readonly IBasketRepository _basketRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPaymentService _paymentService;
         private readonly decimal VolumePricePerCubicMeter = 200;
 
-        public OrderService(IBasketRepository basketRepo, IUnitOfWork unitOfWork)
+        public OrderService(IBasketRepository basketRepo, IUnitOfWork unitOfWork, IPaymentService paymentService)
         {
             _basketRepo = basketRepo;
             _unitOfWork = unitOfWork;
+            _paymentService = paymentService;
         }
 
         public async Task<Order?> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress, int vehicleId)
@@ -63,16 +65,24 @@ namespace LoadFit.Service
                 quantity: item.Quantity
             )).ToList();
 
+            //  Call PaymentService to create a PaymentIntent using the subtotal
+            var paymentResult = await _paymentService.CreateOrUpdatePaymentIntent(subtotal);
+            string paymentIntentId = paymentResult?.PaymentIntentId ?? string.Empty;
+            string clientSecret = paymentResult?.ClientSecret ?? string.Empty;
+
             // 7. Create the order
             var order = new Order
             (
                 buyerEmail: buyerEmail,
                 shippingAddress: shippingAddress,
                 vehicle: vehicle,
-
                 items: orderItems,
-                volumePricePerCubicMeter: VolumePricePerCubicMeter // Adjust based on business needs
+                volumePricePerCubicMeter: VolumePricePerCubicMeter,
+                paymentIntentId: paymentIntentId,
+                clientSecret: clientSecret
             );
+
+            
 
             // 8. Save the order
             await _unitOfWork.Repository<Order>().AddAsync(order);

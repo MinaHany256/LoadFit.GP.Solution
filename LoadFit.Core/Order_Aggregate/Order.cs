@@ -16,7 +16,7 @@ namespace LoadFit.Core.Order_Aggregate
             
         }
 
-        public Order(string buyerEmail, /*OrderStatus status,*/ Address shippingAddress, Vehicle vehicle, ICollection<OrderItem> items, decimal volumePricePerCubicMeter)
+        public Order(string buyerEmail, /*OrderStatus status,*/ Address shippingAddress, Vehicle vehicle, ICollection<OrderItem> items, decimal volumePricePerCubicMeter, string paymentIntentId, string clientSecret)
         {
             BuyerEmail = buyerEmail;
             // Status = status;
@@ -25,6 +25,8 @@ namespace LoadFit.Core.Order_Aggregate
             //DeliveryMethod = deliveryMethod;
             Items = items;
             VolumePricePerCubicMeter = volumePricePerCubicMeter;
+            PaymentIntentId = paymentIntentId;
+            ClientSecret = clientSecret;
         }
 
         public string BuyerEmail { get; set; }
@@ -68,7 +70,8 @@ namespace LoadFit.Core.Order_Aggregate
         }
 
 
-        public string PaymentIntentId { get; set; } = "200";
+        public string? PaymentIntentId { get; set; }
+        public string? ClientSecret { get; set; }
 
     }
 }
